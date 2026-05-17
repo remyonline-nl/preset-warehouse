@@ -85,23 +85,23 @@
 
   /* CAROUSEL BACKGROUND */
   .hero-carousel {
-    position: absolute; inset: 0; z-index: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
   }
   .hero-slide {
-    position: absolute; inset: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
     opacity: 0;
-    transition: opacity 1.2s ease;
-    overflow: hidden;
+    transition: opacity 1.4s ease;
   }
   .hero-slide.active { opacity: 1; }
-  .hero-slide-img {
-    width: 100%; height: 100%; object-fit: cover;
-    transform: scale(1.05);
-    transition: transform 8s ease;
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    position: absolute; inset: 0;
   }
-  .hero-slide.active .hero-slide-img { transform: scale(1); }
 
   /* Dark gradient overlay for text legibility */
   .hero-overlay {
@@ -859,19 +859,19 @@
   <!-- PHOTO CAROUSEL BACKGROUND -->
   <div class="hero-carousel" id="hero-carousel">
     <div class="hero-slide active">
-      <img class="hero-slide-img" src="images/hero-1.jpg" alt="Hero foto 1">
+      <img src="images/hero-1.jpg" alt="">
     </div>
     <div class="hero-slide">
-      <img class="hero-slide-img" src="images/hero-2.jpg" alt="Hero foto 2">
+      <img src="images/hero-2.jpg" alt="">
     </div>
     <div class="hero-slide">
-      <img class="hero-slide-img" src="images/hero-3.jpg" alt="Hero foto 3">
+      <img src="images/hero-3.jpg" alt="">
     </div>
     <div class="hero-slide">
-      <img class="hero-slide-img" src="images/hero-4.jpg" alt="Hero foto 4">
+      <img src="images/hero-4.jpg" alt="">
     </div>
     <div class="hero-slide">
-      <img class="hero-slide-img" src="images/hero-5.jpg" alt="Hero foto 5">
+      <img src="images/hero-5.jpg" alt="">
     </div>
   </div>
 
@@ -1343,35 +1343,28 @@ const heroSlides = [
   { photographer: '@markvanhouten',   preset: 'Film Grain 35mm' },
 ];
 let currentSlide = 0;
-let carouselTimer = null;
 let isPaused = false;
 
 function goToSlide(idx) {
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.hero-dot');
-  slides[currentSlide].classList.remove('active');
-  dots[currentSlide].classList.remove('active');
+  const slides = document.querySelectorAll('#hero-carousel .hero-slide');
+  const dots = document.querySelectorAll('#hero-dots .hero-dot');
+  slides.forEach(s => s.classList.remove('active'));
+  dots.forEach(d => d.classList.remove('active'));
   currentSlide = idx;
   slides[currentSlide].classList.add('active');
-  dots[currentSlide].classList.add('active');
-  document.getElementById('hero-credit-name').textContent = heroSlides[idx].photographer;
-  document.getElementById('hero-credit-preset').textContent = heroSlides[idx].preset;
-}
-
-function nextSlide() {
-  goToSlide((currentSlide + 1) % heroSlides.length);
-}
-
-function startCarousel() {
-  carouselTimer = setInterval(() => { if (!isPaused) nextSlide(); }, 5000);
+  if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+  const nameEl = document.getElementById('hero-credit-name');
+  const presetEl = document.getElementById('hero-credit-preset');
+  if (nameEl) nameEl.textContent = heroSlides[idx].photographer;
+  if (presetEl) presetEl.textContent = heroSlides[idx].preset;
 }
 
 function pauseCarousel() { isPaused = true; }
 function resumeCarousel() { isPaused = false; }
 
-window.addEventListener('load', function() {
-  startCarousel();
-});
+setInterval(function() {
+  if (!isPaused) goToSlide((currentSlide + 1) % heroSlides.length);
+}, 5000);
 
 function showTab(name, el) {
   document.querySelectorAll('.install-panel').forEach(p => p.classList.remove('active'));
