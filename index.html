@@ -91,6 +91,7 @@
     position: absolute; inset: 0;
     opacity: 0;
     transition: opacity 1.2s ease;
+    overflow: hidden;
   }
   .hero-slide.active { opacity: 1; }
   .hero-slide-img {
@@ -1368,7 +1369,9 @@ function startCarousel() {
 function pauseCarousel() { isPaused = true; }
 function resumeCarousel() { isPaused = false; }
 
-startCarousel();
+window.addEventListener('load', function() {
+  startCarousel();
+});
 
 function showTab(name, el) {
   document.querySelectorAll('.install-panel').forEach(p => p.classList.remove('active'));
